@@ -1,0 +1,103 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="hops-view">
+    <template>
+        <style include="shared-styles">
+            :host {
+                height: 100vh;
+            }
+            iron-list {
+                margin:20px;
+            }
+            .spacer {
+                margin:10px;
+            }
+            .card {
+                border-radius: 8px;
+                background-color: white;
+                border: 1px solid #ddd;
+            }
+            .card:focus, .card:hover {
+                outline: 0;
+                border-color: #333;
+            }
+            h1 {
+                text-align: center;
+            }
+            .dim {
+                color: gray;
+            }
+
+        </style>
+        <iron-ajax id="ajax" auto
+                   url="http://api.brewerydb.com/v2/hops"
+                   params='{"key": "fcabc0037e3c549c27bd8901a1979e6f", "p": 1}'
+                   handle-as="json"
+                   on-response="_handleResponse"
+                   last-response="{{ajaxResponse}}"></iron-ajax>
+
+        <template is="dom-repeat" items="[[items]]" filter="filterItems" sort="sortItems">
+            <div class="spacer">
+                <div class="card" tabindex$="[[tabIndex]]">
+                    <h2>[[item.name]]</h2>
+                    <div>
+                        <b>Country of Origin:</b> [[item.countryOfOrigin]]
+                        <b>Alpha Acid:</b> [[item.alphaAcidMin]]
+                        <b>Beta Acid:</b> [[item.betaAcidMin]]
+                    </div>
+                    <p class="dim">[[item.description]]</p>
+                </div>
+            </div>
+        </template>
+    </template>
+
+    <script>
+    Polymer({
+        is: 'hops-view',
+        properties: {
+            items: {
+                type: Array,
+                value: []
+            }
+        },
+        filterItems: function (item) {
+            return item.countryOfOrigin && item.alphaAcidMin && item.description;
+        },
+        sortItems: function(a, b){
+            return a.name < b.name ? -1 : 1;
+        },
+        ready: function(){
+            this._loadMoreData();
+        },
+        _loadMoreData: function() {
+            var that = this;
+            setTimeout(function(){
+                for(var i = 2; i < 5; i++){
+                    that.$.ajax.params.p = i;
+                    that.$.ajax.generateRequest();
+                }
+            }, 500);
+        },
+        _handleResponse: function(e){
+            var data = e.detail.response.data;
+            if(data){
+                var currItems = this.get('items');
+                this.set('items',currItems.concat(data));
+            }
+        }
+    });
+    </script>
+</dom-module>

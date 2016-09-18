@@ -1,0 +1,96 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="locations-view">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+
+                padding: 10px;
+            }
+            .card {
+                max-width: 300px;
+                min-width: 300px;
+                flex: 1;
+                padding: 12px;
+            }
+            h1 {
+                text-align: center;
+            }
+            .flex {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .img {
+                margin:auto;
+                display: block;
+                padding: 10px;
+            }
+        </style>
+        <app-location route="{{route}}"></app-location>
+        <app-route
+                route="{{route}}"
+                pattern="/:page"
+                data="{{routeData}}"
+                tail="{{subroute}}"></app-route>
+
+        <div class="flex">
+            <div class="card" on-tap="handleTap" data-route="/breweries-view/Apex">
+                <h1>Apex</h1>
+                <iron-image class="img" src="http://archivesocial.com/wp-content/uploads/2014/01/Town-of-Apex-Logo.png" width="200" height="200" sizing="cover" preload fade></iron-image>
+            </div>
+            <div class="card" on-tap="handleTap" data-route="/breweries-view/Asheville">
+                <h1>Asheville</h1>
+                <iron-image class="img" src="http://simplicity.ashevillenc.gov/citylogo-flatblue.png" width="200" height="200" sizing="cover" preload fade></iron-image>
+            </div>
+            <div class="card" on-tap="handleTap" data-route="/breweries-view/Cary">
+                <h1>Cary</h1>
+                <iron-image class="img" src="http://boothamphitheatre.com/wp-content/uploads/2015/09/logo-cary.png" width="200" height="200" sizing="cover" preload fade></iron-image>
+            </div>
+            <div class="card" on-tap="handleTap" data-route="/breweries-view/Charlotte">
+                <h1>Charlotte</h1>
+                <iron-image class="img" src="http://prod.static.panthers.clubs.nfl.com/nfl-assets/img/gbl-ico-team/CAR/logos/home/large.png" width="200" height="200" sizing="cover" preload fade></iron-image>
+            </div>
+
+            <div class="card" on-tap="handleTap" data-route="/breweries-view/Durham">
+                <h1>Durham</h1>
+                <iron-image class="img" src="http://rs55.pbsrc.com/albums/g160/truthserum607/2012%20MiLB%20Cap%20AAA%20logo%20set/Durham_Bulls4.png~c200" width="200" height="200" sizing="cover" preload fade></iron-image>
+            </div>
+            <div class="card" on-tap="handleTap" data-route="/breweries-view/Holly Springs">
+                <h1>Holly Springs</h1>
+                <iron-image class="img" src="http://icons.iconarchive.com/icons/lovuhemant/merry-christmas/256/Holly-icon.png" width="200" height="200" sizing="cover" preload fade></iron-image>
+            </div>
+            <div class="card" on-tap="handleTap" data-route="/breweries-view/Raleigh">
+                <h1>Raleigh</h1>
+                <iron-image class="img" src="http://d1s3q4yw1phqma.cloudfront.net/us/wp-content/uploads/sites/2/2015/12/acorn.png?3f7208" width="160" height="200" sizing="cover" preload fade></iron-image>
+            </div>
+        </div>
+    </template>
+
+    <script>
+
+        Polymer({
+            is: 'locations-view',
+            handleTap: function(e) {
+                var route = e.target.getAttribute('data-route') || e.target.parentElement.getAttribute('data-route');
+                this.set('route.path', route);
+            }
+        });
+    </script>
+</dom-module>

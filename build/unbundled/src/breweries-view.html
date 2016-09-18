@@ -1,0 +1,61 @@
+<html><head><link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="shared-styles.html">
+
+</head><body><dom-module id="breweries-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+      .card {
+        max-width: 300px;
+        flex: 1;
+        padding: 12px;
+        cursor: hand;
+      }
+      .flex {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .img {
+        margin:auto;
+        display: block;
+      }
+      .website {
+        overflow:hidden;
+        text-overflow:ellipsis;
+        max-width: 280px;
+        width: 280px;
+        white-space:nowrap;
+        display:block;
+      }
+    </style>
+    <app-location route="{{route}}"></app-location>
+    <iron-ajax auto="" url="[[_computeUrl(subroute)]]" handle-as="json" last-response="{{ajaxResponse}}"></iron-ajax>
+
+    <div class="flex">
+      <template is="dom-repeat" items="[[ajaxResponse.data]]" filter="hasImg" sort="sortBreweries">
+        <div class="card" on-tap="handleTap" data-route="/beers-view/list/">
+          <h1>[[item.brewery.name]]</h1>
+          <address>
+            <b>[[item.locality]], [[item.region]] </b> <br>
+            [[item.streetAddress]]
+          </address>
+          <a class="website" href="[[item.website]]">[[item.website]]</a>
+          <br>
+          <br>
+          <iron-image class="img" src="[[item.brewery.images.squareMedium]]" width="230" height="230" sizing="cover" preload="" fade=""></iron-image>
+        </div>
+      </template>
+    </div>
+  </template>
+
+  <script>Polymer({is:"breweries-view",properties:{subroute:{type:Object,reflectToAttribute:!0}},handleTap:function(e){var t=e.target.getAttribute("data-route")||e.target.parentElement.getAttribute("data-route");this.set("route.path",t+e.model.item.breweryId)},hasImg:function(e){return e.brewery&&e.brewery.images&&e.brewery.images.squareMedium},sortBreweries:function(e,t){return e.brewery.name<t.brewery.name?-1:1},_computeUrl:function(e){return"object"!=typeof e&&(e=JSON.parse(e)),"http://api.brewerydb.com/v2/locations?key=fcabc0037e3c549c27bd8901a1979e6f&locality="+e.locality+"&region=North Carolina"}});</script>
+</dom-module>
+</body></html>
